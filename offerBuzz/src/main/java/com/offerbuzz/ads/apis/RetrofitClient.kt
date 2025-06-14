@@ -1,0 +1,14 @@
+package com.offerbuzz.ads.apis
+
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
+object RetrofitClient {
+    val service: OfferWallService by lazy {
+        Retrofit.Builder()
+            .baseUrl("https://offerbuzz.in/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(OfferWallService::class.java)
+    }
+}
