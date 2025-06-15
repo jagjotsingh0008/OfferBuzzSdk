@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
     val service: OfferWallService by lazy {
         Retrofit.Builder()
-            .baseUrl("https://offerbuzz.in/")
+            .baseUrl(Apis.APP_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(OfferWallService::class.java)

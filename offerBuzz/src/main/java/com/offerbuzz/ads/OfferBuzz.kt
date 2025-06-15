@@ -1,8 +1,10 @@
 package com.offerbuzz.ads
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.util.Log
 import com.offerbuzz.ads.apis.RetrofitClient
 import kotlinx.coroutines.CoroutineScope
@@ -14,10 +16,13 @@ import com.offerbuzz.ads.apis.InitializeCallback
 import kotlinx.coroutines.withContext
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat.startActivity
 import com.offerbuzz.ads.apis.Apis
 import com.offerbuzz.ads.apis.StartOfferCallback
 
-class OfferBuzz(private val context: Context, private val appId:String, private val userId:String) {
+class OfferBuzz(private val context: Context, private val appId:String, private val userId:String, private val isWebView:Boolean?=false) {
+
+    private var sdk = false
 
     private suspend fun fetchGoogleAdId(context: Context): String? = withContext(Dispatchers.IO) {
         try {
@@ -41,6 +46,7 @@ class OfferBuzz(private val context: Context, private val appId:String, private 
                 )
                 if (resp.isSuccessful) {
                     val body = resp.body()
+                    sdk = body?.status == true
                     if (body?.status == true) {
 
                         val token   = body.token
@@ -74,20 +80,32 @@ class OfferBuzz(private val context: Context, private val appId:String, private 
     }
 
     fun startOffer(callback: StartOfferCallback) {
-        val prefs = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
-        val token = prefs.getString("sdk_token", null)
-        if (token.isNullOrEmpty()) {
-            callback.onError("SDK not initialized or token missing")
-            return
-        }
-        val offerUrl = Apis.OFFER_URL+"?key=$token"
+        if (sdk){
+            val prefs = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+            val token = prefs.getString("sdk_token", null)
+            if (token.isNullOrEmpty()) {
+                callback.onError("SDK not initialized")
+                return
+            }
+            val offerUrl = Apis.OFFER_URL+"?key=$token"
 
-        try {
-            context.openInCustomTab(offerUrl)
-            callback.onSuccess()
-        } catch (e: Exception) {
-            callback.onError("Failed to open offer: ${e.message}")
+            if (isWebView == false){
+                try {
+                    context.openInCustomTab(offerUrl)
+                    callback.onSuccess()
+                } catch (e: Exception) {
+                    callback.onError("Failed to open offer: ${e.message}")
+                }
+            }else{
+                val intent = Intent(context, WebViewActivity::class.java)
+                intent.putExtra("url", offerUrl)
+                context.startActivity(intent)
+            }
+
+        }else{
+            callback.onError("SDK not initialized")
         }
+
     }
 
 

@@ -7,7 +7,7 @@ import retrofit2.http.POST
 
 interface OfferWallService {
     @FormUrlEncoded
-    @POST("api/offerwall/v1/api/sdkIniti")
+    @POST("/api/offerwall/v1/api/sdkIniti")
     suspend fun sdkIniti(
         @Field("appId") appId: String,
         @Field("googleAdId") googleAdId: String,
