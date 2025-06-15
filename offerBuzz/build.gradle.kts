@@ -1,5 +1,5 @@
 group = "in.offerbuzz"
-version = "1.0.1"
+version = "1.0.2"
 
 plugins {
     alias(libs.plugins.android.library)
