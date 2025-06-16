@@ -5,6 +5,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
+
 interface OfferWallService {
     @FormUrlEncoded
     @POST("/api/offerwall/v1/api/sdkIniti")

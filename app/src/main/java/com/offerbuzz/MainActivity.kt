@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        offerBuzz = OfferBuzz(this,"75689bf","2",false)
+        offerBuzz = OfferBuzz(this,"75689bf","2",true)
 
         offerBuzz.initializeSdk(object : InitializeCallback{
             override fun onSuccess(message: String?) {
