@@ -18,7 +18,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -56,4 +56,5 @@ dependencies {
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.browser)
+    implementation(libs.offerwall)
 }

@@ -12,6 +12,7 @@ kotlinxCoroutinesAndroid = "1.7.3"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
+offerwall = "1.0.1"
 playServicesAdsIdentifier = "18.2.0"
 retrofit = "2.9.0"
 
@@ -26,6 +27,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+offerwall = { module = "io.leadmint.adjump:offerwall", version.ref = "offerwall" }
 play-services-ads-identifier = { module = "com.google.android.gms:play-services-ads-identifier", version.ref = "playServicesAdsIdentifier" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit2-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
