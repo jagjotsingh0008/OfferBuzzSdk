@@ -1,1 +1,10 @@
-<resources></resources>
+<resources>
+    <string name="congratulations_you_got">Congratulations You Got!</string>
+    <string name="developer_mode_is_not_allowed">Developer mode is not allowed</string>
+    <string name="developer_options_detected">Developer Options Detected!</string>
+    <string name="we_ve_detected_that_developer_options_are_enabled_on_your_device_which_restricts_access_to_our_offerwall_to_continue_earning_rewards_please_disable_developer_options_and_relaunch_the_app">We’ve detected that Developer Options are enabled on your device, which restricts access to our Offerwall. To continue earning rewards, please disable Developer Options and relaunch the app.</string>
+    <string name="steps_to_proceed">Steps to Proceed:</string>
+    <string name="navigate_to_developer_options">- Navigate to Developer Options</string>
+    <string name="toggle_developer_options_off">- Toggle Developer Options Off</string>
+    <string name="reopen_the_app">- Reopen the app</string>
+</resources>

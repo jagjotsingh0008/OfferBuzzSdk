@@ -1,7 +1,6 @@
 package com.offerbuzz.ads
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
@@ -12,17 +11,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import android.provider.Settings
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
-import com.offerbuzz.ads.apis.InitializeCallback
+import com.offerbuzz.ads.`interface`.InitializeCallback
 import kotlinx.coroutines.withContext
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat.startActivity
 import com.offerbuzz.ads.apis.Apis
-import com.offerbuzz.ads.apis.StartOfferCallback
+import com.offerbuzz.ads.apis.Notification
+import com.offerbuzz.ads.`interface`.StartOfferCallback
 
 class OfferBuzz(private val context: Context, private val appId:String, private val userId:String, private val isWebView:Boolean?=false) {
 
     private var sdk = false
+    private lateinit var notification: Notification
 
     private suspend fun fetchGoogleAdId(context: Context): String? = withContext(Dispatchers.IO) {
         try {
@@ -57,6 +57,8 @@ class OfferBuzz(private val context: Context, private val appId:String, private 
                             .edit()
                             .putString("sdk_token", token)
                             .apply()
+
+                        Log.d("SDK_INIT","token $token")
 
                         initializeCallback.onSuccess("$title $message")
                     } else {
@@ -97,8 +99,12 @@ class OfferBuzz(private val context: Context, private val appId:String, private 
                     callback.onError("Failed to open offer: ${e.message}")
                 }
             }else{
-                val intent = Intent(context, WebViewActivity::class.java)
-                intent.putExtra("url", offerUrl)
+                val intent = Intent(context, CheckingActivity::class.java).apply {
+                    putExtra("url", offerUrl)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                }
                 context.startActivity(intent)
             }
 

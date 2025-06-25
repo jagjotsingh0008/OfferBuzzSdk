@@ -1,4 +1,4 @@
-package com.offerbuzz.ads.apis
+package com.offerbuzz.ads.`interface`
 
 interface StartOfferCallback {
     /** Called once the Offer Activity was successfully launched */

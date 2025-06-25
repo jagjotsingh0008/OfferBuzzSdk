@@ -1,27 +1,36 @@
 package com.offerbuzz.ads
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.webkit.WebSettings
 import android.webkit.WebViewClient
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.offerbuzz.ads.databinding.ActivityWebViewBinding
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import com.offerbuzz.ads.apis.Apis
+import com.offerbuzz.ads.apis.Notification
+import com.offerbuzz.ads.models.LoadingDialog
 
 
 class WebViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWebViewBinding
+    private var token = ""
+    private lateinit var notification: Notification
+    private lateinit var loadingDialog: LoadingDialog
+    private var back = 0
+
+    private var lastBackPressTime = 0L
+    private val backPressThreshold = 2000L
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +48,10 @@ class WebViewActivity : AppCompatActivity() {
         cookieManager.setAcceptCookie(true)
         cookieManager.setAcceptThirdPartyCookies(binding.webView, true)
 
+        notification = Notification(this)
+        loadingDialog = LoadingDialog(this)
+
+
         binding.webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
@@ -49,12 +62,29 @@ class WebViewActivity : AppCompatActivity() {
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.settings.domStorageEnabled = true
 
+        val prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        token = prefs.getString("sdk_token", null).toString()
+
+        notification.check(token)
+
 
         binding.webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest): Boolean {
                 val url = request.url.toString()
-
                 return handleUrl(view, url)
+            }
+
+            override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                loadingDialog.show()
+
+            }
+
+
+            override fun onPageFinished(view: WebView, url: String) {
+                super.onPageFinished(view, url)
+                loadingDialog.dismiss()
+
             }
 
             @Deprecated("Deprecated in Java")
@@ -66,9 +96,10 @@ class WebViewActivity : AppCompatActivity() {
                 if (url == null) return true
 
                 val uri = Uri.parse(url)
+
                 val baseUrl = "${uri.scheme}://${uri.host}${uri.path}"
 
-                Log.d("baseUrl", "opening URL: $baseUrl")
+                Log.d("baseUrl", "opening URL: $baseUrl and $url")
 
                 return if (baseUrl == Apis.TRACKING) {
                     try {
@@ -87,16 +118,39 @@ class WebViewActivity : AppCompatActivity() {
 
         }
 
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.webView.canGoBack()) {
+
+                    binding.webView.goBack()
+                } else {
+
+                    val now = System.currentTimeMillis()
+                    if (now - lastBackPressTime <= backPressThreshold) {
+
+                        isEnabled = false
+                        finish()
+                    } else {
+
+                        Toast.makeText(
+                            this@WebViewActivity,
+                            "Press back again to exit",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        lastBackPressTime = now
+                    }
+                }
+            }
+        })
+
+
         binding.webView.loadUrl(intent.getStringExtra("url") ?: "https://offerbuzz.in")
 
     }
 
-    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
-    override fun onBackPressed() {
-        if (binding.webView.canGoBack()) {
-            binding.webView.goBack()
-        } else {
-            super.onBackPressed()
-        }
+
+    override fun onStart() {
+        super.onStart()
+        notification.check(token)
     }
 }

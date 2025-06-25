@@ -18,9 +18,6 @@ class MainActivity : AppCompatActivity() {
             binding = ActivityMainBinding.inflate(layoutInflater)
             setContentView(binding.root)
 
-            val web = binding.myWebView
-            web.loadUrl(intent.getStringExtra("url") ?: "https://offerbuzz.in")
-            Toast.makeText(this, intent.getStringExtra("url"), Toast.LENGTH_SHORT).show()
         }
 
 }

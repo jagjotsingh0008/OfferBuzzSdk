@@ -5,14 +5,10 @@ import android.content.Context
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.offerbuzz.ads.OfferBuzz
-import com.offerbuzz.ads.WebViewComponent
-import com.offerbuzz.ads.apis.InitializeCallback
-import com.offerbuzz.ads.apis.StartOfferCallback
+import com.offerbuzz.ads.`interface`.InitializeCallback
+import com.offerbuzz.ads.`interface`.StartOfferCallback
 import com.offerbuzz.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -27,9 +23,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        offerBuzz = OfferBuzz(this,"75689bf","2",true)
+        offerBuzz = OfferBuzz(this,"75689bf",getDeviceId(this),true)
 
-        offerBuzz.initializeSdk(object : InitializeCallback{
+        offerBuzz.initializeSdk(object : InitializeCallback {
             override fun onSuccess(message: String?) {
                 Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
             }
@@ -42,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.button.setOnClickListener {
             if (offerBuzz.isAvailable()){
-                offerBuzz.startOffer(object :StartOfferCallback{
+                offerBuzz.startOffer(object : StartOfferCallback {
                     override fun onSuccess() {
 
                     }

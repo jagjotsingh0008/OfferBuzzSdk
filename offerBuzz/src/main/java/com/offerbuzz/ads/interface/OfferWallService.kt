@@ -1,5 +1,7 @@
-package com.offerbuzz.ads.apis
+package com.offerbuzz.ads.`interface`
 
+import com.offerbuzz.ads.apis.NotificationResponse
+import com.offerbuzz.ads.apis.SdkInitiResponse
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -15,4 +17,11 @@ interface OfferWallService {
         @Field("deviceId") deviceId: String,
         @Field("userId") userId: String
     ): Response<SdkInitiResponse>
+
+    @FormUrlEncoded
+    @POST("/api/offerwall/v1/api/offers/notification")
+    suspend fun sendNotification(
+        @Field("token")    token:    String
+    ): Response<NotificationResponse>
+
 }

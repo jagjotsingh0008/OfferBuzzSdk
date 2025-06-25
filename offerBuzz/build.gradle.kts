@@ -56,5 +56,7 @@ dependencies {
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.browser)
+    implementation (libs.lottie)
     implementation(libs.offerwall)
+
 }
