@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        offerBuzz = OfferBuzz(this,"75689bf",getDeviceId(this),true)
+        offerBuzz = OfferBuzz(this,"39906ac4",getDeviceId(this))
 
         offerBuzz.initializeSdk(object : InitializeCallback {
             override fun onSuccess(message: String?) {

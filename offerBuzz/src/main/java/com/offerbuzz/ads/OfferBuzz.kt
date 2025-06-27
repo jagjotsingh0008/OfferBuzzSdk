@@ -19,7 +19,7 @@ import com.offerbuzz.ads.apis.Apis
 import com.offerbuzz.ads.apis.Notification
 import com.offerbuzz.ads.`interface`.StartOfferCallback
 
-class OfferBuzz(private val context: Context, private val appId:String, private val userId:String, private val isWebView:Boolean?=false) {
+class OfferBuzz(private val context: Context, private val appId:String, private val userId:String, private val isWebView:Boolean?=true) {
 
     private var sdk = false
     private lateinit var notification: Notification
